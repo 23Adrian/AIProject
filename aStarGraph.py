@@ -1,3 +1,5 @@
+from random import seed, randint
+
 class Graph:
 
     # Initialize the class
@@ -41,6 +43,9 @@ class Node:
     def __init__(self, name:str, parent:str):
         self.name = name
         self.parent = parent
+
+        self.speedLimit = 0
+
         self.g = 0 # Distance to start node
         self.h = 0 # Distance to goal node
         self.f = 0 # Total cost
@@ -63,9 +68,12 @@ class Node:
 #def astar_search(graph, heuristics, start, end):
 def astar_search(graph, start, end):
     
-    # Create lists for open nodes and closed nodes
+    # Create lists for discovered and visited nodes
     open = []
     closed = []
+    #TODO this is the seed to create sudo randomness
+    #help to create a more consistent randomness
+    #seed(999)
 
     # Create a start node and an goal node
     start_node = Node(start, None)
@@ -113,7 +121,7 @@ def astar_search(graph, start, end):
             neighbor.g = current_node.g + graph.get(current_node.name, neighbor.name)
 
             #function version
-            heuristic = findHeuristic(neighbor.name,goal_node.name)
+            heuristic = findHeuristicTrafic(randint(0,5) ,neighbor.name,goal_node.name)
 
             neighbor.h = heuristic
             neighbor.f = neighbor.g + neighbor.h
@@ -133,16 +141,62 @@ def add_to_open(open, neighbor):
             return False
     return True
 
-            
-def findHeuristic(start, end):
+#heuristic based on trafic
+def findHeuristicTrafic(trafic, start, end):
     x1, y1 = (romania_map.locations.get(start))
     
     x2, y2 = (romania_map.locations.get(end))
 
     x = int(x2) - int(x1)
     y = int(y2) - int(y1)
+    distance = ((x**2 ) + (y**2))
+    #60mph base case
+    if trafic == 0:
+        return  distance
+    #little trafic
+    if trafic == 1:
+        return  distance + 20
+    #light trafic
+    if trafic == 2:
+        return  distance + 30
+    #medium traffic
+    if trafic == 3:
+        return  distance + 60
+    #big trafic
+    if trafic == 4: 
+        return  distance + 120
+    #heavy trafic
+    if trafic == 5:
+        return distance + 200
+    return distance
 
-    return ((x**2 ) + (y**2))
+#heuristic based on speed limit          
+def findHeuristic(speed, start, end):
+    x1, y1 = (romania_map.locations.get(start))
+    
+    x2, y2 = (romania_map.locations.get(end))
+
+    x = int(x2) - int(x1)
+    y = int(y2) - int(y1)
+    distance = ((x**2 ) + (y**2))
+    #60mph base case
+    if speed == 0:
+        return  distance
+    #30mph
+    if speed == 1:
+        return  distance * 2
+    #15mph
+    if speed == 2:
+        return  distance * 4
+    #45mph
+    if speed == 3:
+        return  distance* 1.35
+    #75mph
+    if speed == 4: 
+        return  distance * .80
+    
+
+    return distance
 
 
 def UndirectedGraph(graph_dict=None):
