@@ -1110,6 +1110,7 @@ romania_map = UndirectedGraph(dict(
     Pitesti=dict(Rimnicu=97),
     Rimnicu=dict(Sibiu=80),
     Urziceni=dict(Vaslui=142)))
+    
 romania_map.locations = dict(
     Arad=(91, 492), Bucharest=(400, 327), Craiova=(253, 288),
     Drobeta=(165, 299), Eforie=(562, 293), Fagaras=(305, 449),
@@ -1203,6 +1204,7 @@ class GraphProblem(Problem):
 
         return m
 
+    #TODO
     def h(self, node):
         """h function is straight-line distance from a node's state to goal."""
         locs = getattr(self.graph, 'locations', None)
@@ -1284,7 +1286,7 @@ class NQueensProblem(Problem):
                        for col in range(len(state)))
 
     def h(self, node):
-        """Return number of conflicting queens for a given node"""
+        """Return number of conflicting queens for a given node"""  
         num_conflicts = 0
         for (r1, c1) in enumerate(node.state):
             for (r2, c2) in enumerate(node.state):
@@ -1582,8 +1584,11 @@ def main():
 
    # path = astar_search(romania_map, None, True)
    # print(path)
+    problem = GraphProblem('Arad', 'Bucharest', romania_map)
+    AStar = astar_search(problem)
+    
     compare_graph_searchers()
-
+    print(AStar)
 
 if __name__ == '__main__':
     main()
