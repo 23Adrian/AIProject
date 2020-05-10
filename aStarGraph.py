@@ -1,7 +1,8 @@
+import math
 from random import seed, randint
 
-class Graph:
 
+class Graph:
     # Initialize the class
     def __init__(self, graph_dict=None, directed=True):
         self.graph_dict = graph_dict or {}
@@ -36,9 +37,9 @@ class Graph:
         nodes = s1.union(s2)
         return list(nodes)
 
+
 # This class represent a node
 class Node:
-
     # Initialize the class
     def __init__(self, name:str, parent:str):
         self.name = name
@@ -60,20 +61,18 @@ class Node:
 
     # Print node
     def __repr__(self):
-        return ('({0},{1})'.format(self.position, self.f))
-
+        return '({0},{1})'.format(self.position, self.f)
 
 
 # A* search
-#def astar_search(graph, heuristics, start, end):
+# def astar_search(graph, heuristics, start, end):
 def astar_search(graph, start, end):
-    
     # Create lists for discovered and visited nodes
     open = []
     closed = []
-    #TODO this is the seed to create sudo randomness
-    #help to create a more consistent randomness
-    #seed(999)
+    # TODO this is the seed to create sudo randomness
+    # help to create a more consistent randomness
+    # seed(999)
 
     # Create a start node and an goal node
     start_node = Node(start, None)
@@ -81,10 +80,9 @@ def astar_search(graph, start, end):
 
     # Add the start node
     open.append(start_node)
-    
+
     # Loop until the open list is empty
     while len(open) > 0:
-
         # Sort the open list to get the node with the lowest cost first
         open.sort()
 
@@ -118,12 +116,14 @@ def astar_search(graph, start, end):
                 continue
 
             # Calculate full path cost
-            neighbor.g = current_node.g + graph.get(current_node.name, neighbor.name)
+            c = heuristicFunction(neighbor.name,goal_node.name)
+            neighbor.g = graph.get(current_node.name, neighbor.name) + heuristicFunction(neighbor.name, goal_node.name)
 
-            #function version
-            heuristic = findHeuristicTrafic(randint(0,5) ,neighbor.name,goal_node.name)
+            # Calculate full path cost with realistic components that affect
+            neighbor.h = trafficComponent(randint(0, 5)) + \
+                         speedComponent(randint(0, 4), neighbor.g) +\
+                         accidentComponent(randint(0, 1))
 
-            neighbor.h = heuristic
             neighbor.f = neighbor.g + neighbor.h
 
             # Check if neighbor is in open list and if it has a lower f value
@@ -134,74 +134,75 @@ def astar_search(graph, start, end):
     # Return None, no path is found
     return None
 
+
 # Check if a neighbor should be added to open list
 def add_to_open(open, neighbor):
     for node in open:
-        if (neighbor == node and neighbor.f > node.f):
+        if(neighbor == node and neighbor.f> node.f):
             return False
     return True
 
-#heuristic based on trafic
-def findHeuristicTrafic(trafic, start, end):
-    x1, y1 = (romania_map.locations.get(start))
-    
-    x2, y2 = (romania_map.locations.get(end))
+
+def heuristicFunction(current, goal):
+    x1, y1 = (romania_map.locations.get(current))
+
+    x2, y2 = (romania_map.locations.get(goal))
 
     x = int(x2) - int(x1)
     y = int(y2) - int(y1)
-    distance = ((x**2 ) + (y**2))
-    #60mph base case
-    if trafic == 0:
-        return  distance
-    #little trafic
-    if trafic == 1:
-        return  distance + 20
-    #light trafic
-    if trafic == 2:
-        return  distance + 30
-    #medium traffic
-    if trafic == 3:
-        return  distance + 60
-    #big trafic
-    if trafic == 4: 
-        return  distance + 120
-    #heavy trafic
-    if trafic == 5:
-        return distance + 200
-    return distance
+    return int(math.sqrt((x ** 2) + (y ** 2)))
 
-#heuristic based on speed limit          
-def findHeuristic(speed, start, end):
-    x1, y1 = (romania_map.locations.get(start))
-    
-    x2, y2 = (romania_map.locations.get(end))
 
-    x = int(x2) - int(x1)
-    y = int(y2) - int(y1)
-    distance = ((x**2 ) + (y**2))
-    #60mph base case
+# heuristic based on traffic
+def trafficComponent(traffic):
+    # no traffic
+    if traffic == 0:
+        return 0
+    # little traffic
+    if traffic == 1:
+        return 20
+    # light traffic
+    if traffic == 2:
+        return 30
+    # medium traffic
+    if traffic == 3:
+        return 60
+    # big traffic
+    if traffic == 4:
+        return 120
+    # heavy traffic
+    return 200
+
+
+# heuristic based on speed limit
+def speedComponent(speed, distance):
+    # 60mph base case
     if speed == 0:
-        return  distance
-    #30mph
+        return 0
+    # 30mph
     if speed == 1:
-        return  distance * 2
-    #15mph
+        return distance * 2
+    # 15mph
     if speed == 2:
-        return  distance * 4
-    #45mph
+        return distance * 4
+    # 45mph
     if speed == 3:
-        return  distance* 1.35
-    #75mph
-    if speed == 4: 
-        return  distance * .80
-    
+        return int(distance * 1.333)
+    # 75mph
+    return int(distance * .80)
 
-    return distance
+
+def accidentComponent(accident):
+    # no accident
+    if accident == 0:
+        return 0
+    return 50
 
 
 def UndirectedGraph(graph_dict=None):
     """Build a Graph where every edge (including future ones) goes both ways."""
     return Graph(graph_dict=graph_dict, directed=False)
+
 
 romania_map = UndirectedGraph(dict(
     Arad=dict(Zerind=75, Sibiu=140, Timisoara=118),
@@ -230,8 +231,6 @@ romania_map.locations = dict(
 
 # The main entry point for this module
 def main():
-
-
     # Run the search algorithm
     path = astar_search(romania_map,  'Arad', 'Bucharest')
     print(path)
