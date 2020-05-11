@@ -41,15 +41,15 @@ class Graph:
 # This class represent a node
 class Node:
     # Initialize the class
-    def __init__(self, name:str, parent:str):
+    def __init__(self, name: str, parent: str):
         self.name = name
         self.parent = parent
 
         self.speedLimit = 0
 
-        self.g = 0 # Distance to start node
-        self.h = 0 # Distance to goal node
-        self.f = 0 # Total cost
+        self.g = 0  # Distance to start node
+        self.h = 0  # Distance to goal node
+        self.f = 0  # Total cost
 
     # Compare nodes
     def __eq__(self, other):
@@ -57,7 +57,7 @@ class Node:
 
     # Sort nodes
     def __lt__(self, other):
-         return self.f < other.f
+        return self.f < other.f
 
     # Print node
     def __repr__(self):
@@ -66,7 +66,7 @@ class Node:
 
 # A* search
 # def astar_search(graph, heuristics, start, end):
-def astar_search(graph, start, end):
+def astar_search(graph, start, end, tollBool):
     # Create lists for discovered and visited nodes
     open = []
     closed = []
@@ -91,7 +91,7 @@ def astar_search(graph, start, end):
 
         # Add the current node to the closed list
         closed.append(current_node)
-        
+
         # Check if we have reached the goal, return the path
         if current_node == goal_node:
             path = []
@@ -112,33 +112,32 @@ def astar_search(graph, start, end):
             neighbor = Node(key, current_node)
 
             # Check if the neighbor is in the closed list
-            if(neighbor in closed):
+            if (neighbor in closed):
                 continue
 
             # Calculate full path cost
-            c = heuristicFunction(neighbor.name,goal_node.name)
             neighbor.g = graph.get(current_node.name, neighbor.name) + heuristicFunction(neighbor.name, goal_node.name)
 
             # Calculate full path cost with realistic components that affect
             neighbor.h = trafficComponent(randint(0, 5)) + \
-                         speedComponent(randint(0, 4), neighbor.g) +\
+                         speedComponent(randint(0, 4), neighbor.g) + \
                          accidentComponent(randint(0, 1))
 
             neighbor.f = neighbor.g + neighbor.h
 
             # Check if neighbor is in open list and if it has a lower f value
-            if(add_to_open(open, neighbor) == True):
+            if (add_to_open(open, neighbor) == True and tollsComponent(randint(0, 1), tollBool)):
                 # Everything is green, add neighbor to open list
                 open.append(neighbor)
 
-    # Return None, no path is found
-    return None
+    # Return None, no path is found without tolls
+    return "There is no toll-free path to reach the destination."
 
 
 # Check if a neighbor should be added to open list
 def add_to_open(open, neighbor):
     for node in open:
-        if(neighbor == node and neighbor.f> node.f):
+        if (neighbor == node and neighbor.f > node.f):
             return False
     return True
 
@@ -199,6 +198,13 @@ def accidentComponent(accident):
     return 50
 
 
+def tollsComponent(toll, tollBool):
+    # has toll and the user want to avoid tolls
+    if (toll == 1 and tollBool == False):
+        return False
+    return True
+
+
 def UndirectedGraph(graph_dict=None):
     """Build a Graph where every edge (including future ones) goes both ways."""
     return Graph(graph_dict=graph_dict, directed=False)
@@ -232,9 +238,10 @@ romania_map.locations = dict(
 # The main entry point for this module
 def main():
     # Run the search algorithm
-    path = astar_search(romania_map,  'Arad', 'Bucharest')
+    path = astar_search(romania_map, 'Arad', 'Bucharest', False)
     print(path)
     print()
+
 
 # Tell python to run main method
 if __name__ == "__main__": main()
