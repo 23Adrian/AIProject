@@ -239,9 +239,12 @@ romania_map.locations = dict(
 # The main entry point for this module
 def main():
     # Run the search algorithm
+    #this will continue even if it has tolls
     path = astar_search(romania_map, 'Arad', 'Bucharest', False)
+    #this will avoid tolls into account tolls
+    pathNoTolls = astar_search(romania_map, 'Arad', 'Bucharest', True)
     print(path)
-    print()
+    print(printNoTolls)
 
 
 # Tell python to run main method
