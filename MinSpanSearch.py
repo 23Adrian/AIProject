@@ -3,6 +3,11 @@ from graph import *
 from collections import defaultdict
 import heapq
 
+def depthFirstSearch(graph, start, finish):
+
+    
+    return
+
 
 def create_spanning_tree(graph, starting_vertex):
     mst = defaultdict(set)
@@ -50,15 +55,15 @@ example_graph = {
 }
 
 dict(create_spanning_tree(example_graph, 'A'))
-
 def MinSpanSearch(graph, start, end):
     # Create lists for discovered and visited nodes
     open = []
     closed = []
     # TODO this is the seed to create sudo randomness
     # help to create a more consistent randomness
-    # seed(999)
-
+    seed(999)
+    #seed(5)
+    seed(35)
     # Create a start node and an goal node
     start_node = Node(start, None)
     goal_node = Node(end, None)
@@ -70,12 +75,13 @@ def MinSpanSearch(graph, start, end):
     while len(open) > 0:
         # Sort the open list to get the node with the lowest cost first
         open.sort()
+
         # Get the node with the lowest cost
         current_node = open.pop(0)
 
         # Add the current node to the closed list
         closed.append(current_node)
-        
+
         # Check if we have reached the goal, return the path
         if current_node == goal_node:
             path = []
@@ -96,16 +102,24 @@ def MinSpanSearch(graph, start, end):
             neighbor = Node(key, current_node)
 
             # Check if the neighbor is in the closed list
-            if(neighbor in closed):
+            if (neighbor in closed):
                 continue
 
+            # Calculate full path cost
+            neighbor.g = graph.get(current_node.name, neighbor.name) 
+
+            # Calculate full path cost with realistic components that affect
+
+
+            neighbor.f = neighbor.g + neighbor.h
+
             # Check if neighbor is in open list and if it has a lower f value
-            if(add_to_open(open, neighbor) == True):
+            if (add_to_open(open, neighbor) == True ):
                 # Everything is green, add neighbor to open list
                 open.append(neighbor)
 
-    # Return None, no path is found
-    return None
+    # Return None, no path is found without tolls
+    return "There is no toll-free path to reach the destination."
 
 def add_to_open(open, neighbor):
     for node in open:

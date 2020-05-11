@@ -66,14 +66,15 @@ class Node:
 
 # A* search
 # def astar_search(graph, heuristics, start, end):
-def astar_search(graph, start, end, tollBool):
+def astar_search(graph, start, end, avoidTolls):
     # Create lists for discovered and visited nodes
     open = []
     closed = []
     # TODO this is the seed to create sudo randomness
     # help to create a more consistent randomness
-    # seed(999)
-
+    seed(999)
+    #seed(5)
+    seed(35)
     # Create a start node and an goal node
     start_node = Node(start, None)
     goal_node = Node(end, None)
@@ -126,7 +127,7 @@ def astar_search(graph, start, end, tollBool):
             neighbor.f = neighbor.g + neighbor.h
 
             # Check if neighbor is in open list and if it has a lower f value
-            if (add_to_open(open, neighbor) == True and tollsComponent(randint(0, 1), tollBool)):
+            if (add_to_open(open, neighbor) == True and tollsComponent(randint(0, 1), avoidTolls)):
                 # Everything is green, add neighbor to open list
                 open.append(neighbor)
 
@@ -198,9 +199,9 @@ def accidentComponent(accident):
     return 50
 
 
-def tollsComponent(toll, tollBool):
+def tollsComponent(toll, avoidTolls):
     # has toll and the user want to avoid tolls
-    if (toll == 1 and tollBool == False):
+    if (toll == 1 and avoidTolls == True):
         return False
     return True
 
