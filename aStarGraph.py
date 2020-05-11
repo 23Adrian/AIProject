@@ -244,7 +244,7 @@ def main():
     #this will avoid tolls into account tolls
     pathNoTolls = astar_search(romania_map, 'Arad', 'Bucharest', True)
     print(path)
-    print(printNoTolls)
+    print(pathNoTolls)
 
 
 # Tell python to run main method
