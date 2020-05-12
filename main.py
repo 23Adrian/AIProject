@@ -1,5 +1,6 @@
 import aStarGraph
 import MinSpanSearch
+import time
 
 
 class Graph:
@@ -68,23 +69,33 @@ romania_map.locations = dict(
     Vaslui=(509, 444), Zerind=(108, 531))
 
 
+# Test Algorithm
+def algorithmAnalysis(algorithm):
+    start_time = time.time()
+    return algorithm, time.time() - start_time  # returns the path and time of execution
+
 def main():
+    timeAvoidToll = [0,0]
+    timeTakeToll = [0,0]
     # Run the search algorithm
     # this will continue even if it has tolls
-    path = aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', False)
+    path, timeTakeToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', False))
     print(path)
+    print(timeTakeToll[0])
 
     # this will avoid tolls into account tolls
-    pathNoTolls = aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', True)
+    pathNoTolls, timeAvoidToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', True))
     print(pathNoTolls)
-    print()
+    print(timeAvoidToll[0], end="\n\n")
 
-    minPath = MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest', False)
+    minPath, timeTakeToll[1] = algorithmAnalysis(MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest', False))
     print(minPath)
+    print(timeTakeToll[1])
 
     # this will avoid tolls into account tolls
-    minPathNoTolls = MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest', True)
+    minPathNoTolls, timeAvoidToll[1] = algorithmAnalysis(MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest', True))
     print(minPathNoTolls)
+    print(timeAvoidToll[1])
 
 # Tell python to run main method
 if __name__ == "__main__": main()

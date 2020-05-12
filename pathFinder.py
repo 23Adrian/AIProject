@@ -40,7 +40,6 @@ romania_map.locations = dict(
 # Test Algorithm
 def algorithmAnalysis(algo):
     start_time = time.time()
-    print(start_time)
     return algo, time.time() - start_time  # returns the path and time of execution
 
 
