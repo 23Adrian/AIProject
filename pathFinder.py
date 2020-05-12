@@ -47,7 +47,7 @@ def algorithmAnalysis(algo):
 # The main entry point for this module
 def main():
     # Run the search algorithm
-    algorithm1 = algorithmAnalysis(astar_search(romania_map,  'Arad', 'Bucharest'))
+    algorithm1 = algorithmAnalysis(astar_search(romania_map,  'Arad', 'Bucharest', True))
     # algorithm2 = algorithmAnalysis()
     print("Algorithm 1:\nRuntime: {}\npath: {}".format(algorithm1[1], algorithm1[0]))
     # print("Algorithm 2:\nRuntime: {}\npath: {}".format(algorithm2[1], algorithm2[0]))

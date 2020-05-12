@@ -73,7 +73,6 @@ def astar_search(graph, start, end, avoidTolls):
     # TODO this is the seed to create sudo randomness
     # help to create a more consistent randomness
     seed(999)
-    #seed(5)
     seed(35)
     # Create a start node and an goal node
     start_node = Node(start, None)
