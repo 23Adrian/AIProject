@@ -1,6 +1,6 @@
 # Search Algorithms 
 from aStarGraph import astar_search
-# import (second algorithm)
+from MinSpanSearch import MinSpanSearch
 
 # Utility
 import time
@@ -41,22 +41,22 @@ romania_map.locations = dict(
 def algorithmAnalysis(algo):
     start_time = time.time()
     print(start_time)
-    return (algo, time.time() - start_time)  # returns the path and time of execution
+    return algo, time.time() - start_time  # returns the path and time of execution
 
 
 # The main entry point for this module
 def main():
     # Run the search algorithm
     algorithm1 = algorithmAnalysis(astar_search(romania_map,  'Arad', 'Bucharest', True))
-    # algorithm2 = algorithmAnalysis()
+    algorithm2 = algorithmAnalysis(MinSpanSearch(romania_map,  'Arad', 'Bucharest'))
     print("Algorithm 1:\nRuntime: {}\npath: {}".format(algorithm1[1], algorithm1[0]))
-    # print("Algorithm 2:\nRuntime: {}\npath: {}".format(algorithm2[1], algorithm2[0]))
-    # if algorithm1[1] == algorithm2[1]:
-    #     print("Both algorithms took the same time to execute")
-    # elif algorithm1[1] > algorithm2[1]:
-    #     print("A* algorithm was faster")
-    # else:
-    #     print("Algorithm 2 was faster")
+    print("Algorithm 2:\nRuntime: {}\npath: {}".format(algorithm2[1], algorithm2[0]))
+    if algorithm1[1] == algorithm2[1]:
+        print("Both algorithms took the same time to execute")
+    elif algorithm1[1] > algorithm2[1]:
+        print("A* algorithm was faster")
+    else:
+        print("Algorithm 2 was faster")
 
 
 # Tell python to run main method

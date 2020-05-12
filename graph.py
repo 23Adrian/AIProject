@@ -45,7 +45,6 @@ class Node:
 
         seed(len(name))
         num = randint(1,11)
-        print(num)
         self.speedLimit = setSpeedLimit(num)
         self.trafficSlowdown = setTrafficSlowdown(num)
         self.trafficAccident = setTrafficAccident(num)
