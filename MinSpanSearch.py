@@ -2,6 +2,7 @@ from graph import *
 from collections import defaultdict
 import components
 import heapq
+import random as rand
 
 
 def create_spanning_tree(graph, starting_vertex):
@@ -41,8 +42,8 @@ def MinSpanSearch(graph, start, end, avoidTolls):
     closed = []
     # TODO this is the seed to create sudo randomness
     # help to create a more consistent randomness
-    seed(999)
-    seed(35)
+    rand.seed(999)
+    rand.seed(35)
     # Create a start node and an goal node
     start_node = Node(start, None)
     goal_node = Node(end, None)
@@ -88,15 +89,13 @@ def MinSpanSearch(graph, start, end, avoidTolls):
             neighbor.g = graph.get(current_node.name, neighbor.name) 
 
             # Calculate full path cost with realistic components that affect
-            neighbor.h = components.trafficComponent(randint(0, 5)) + \
-                         components.speedComponent(randint(0, 4), neighbor.g) + \
-                         components.accidentComponent(randint(0, 1))
+            neighbor.h = components.componentAdjustments(rand, neighbor.g)
 
 
             neighbor.f = neighbor.g + neighbor.h
 
             # Check if neighbor is in open list and if it has a lower f value
-            if (add_to_open(open, neighbor) == True and components.tollsComponent(randint(0, 1), avoidTolls)):
+            if (add_to_open(open, neighbor) == True and components.tollsComponent(rand.randint(0, 1), avoidTolls)):
                 # Everything is green, add neighbor to open list
                 open.append(neighbor)
 

@@ -43,12 +43,7 @@ class Node:
         self.name = name
         self.parent = parent
 
-        seed(len(name))
-        num = randint(1,11)
-        self.speedLimit = setSpeedLimit(num)
-        self.trafficSlowdown = setTrafficSlowdown(num)
-        self.trafficAccident = setTrafficAccident(num)
-        self.trafficMultiplier = setSpeedLimit(num) * setTrafficAccident(num) * setTrafficSlowdown(num)
+        self.speedLimit = 0
 
         self.g = 0 # Distance to start node
         self.h = 0 # Distance to goal node
@@ -65,19 +60,4 @@ class Node:
     # Print node
     def __repr__(self):
         return ('({0},{1})'.format(self.position, self.f))
-
-
-def setTrafficSlowdown(randNum):
-    switch = {
-        1: 1, 2: 1, 3: 1, 4: 1.5, 5: 1.5, 6: 2, 7: 2, 8: 2.5, 9: 2.5, 10: 3,}
-    return switch.get(randNum, "Invalid argument")
-
-def setTrafficAccident(randNum):
-    switch = {
-        1: 1, 2: 1, 3: 1, 4: 1, 5: 4, 6: 1, 7: 1, 8: 4, 9: 1, 10: 1,}
-    return switch.get(randNum, "Invalid argument")
-
-def setSpeedLimit(randNum):
-    switch = {
-        1: 1, 2: 2, 3: 1, 4: 4, 5: 4, 6: 1.35, 7: 1, 8: .80, 9: 1, 10: 1,}
-    return switch.get(randNum, "Invalid argument")
+        

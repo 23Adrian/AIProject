@@ -1,4 +1,4 @@
-def trafficComponent(traffic):
+def _trafficComponent(traffic):
     # no traffic
     if traffic == 0:
         return 0
@@ -19,7 +19,7 @@ def trafficComponent(traffic):
 
 
 # heuristic based on speed limit
-def speedComponent(speed, distance):
+def _speedComponent(speed, distance):
     # 60mph base case
     if speed == 0:
         return 0
@@ -36,7 +36,7 @@ def speedComponent(speed, distance):
     return int(distance * .80)
 
 
-def accidentComponent(accident):
+def _accidentComponent(accident):
     # no accident
     if accident == 0:
         return 0
@@ -48,3 +48,8 @@ def tollsComponent(toll, avoidTolls):
     if (toll == 1 and avoidTolls == True):
         return False
     return True
+
+def componentAdjustments(rand, distance):
+    return _trafficComponent(rand.randint(0, 5)) + \
+            _speedComponent(rand.randint(0, 4), distance) + \
+            _accidentComponent(rand.randint(0, 1))
