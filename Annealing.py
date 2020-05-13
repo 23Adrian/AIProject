@@ -1,10 +1,13 @@
 
 from SearchAlgos import GraphProblem
+from aStarGraph import heuristicFunction
 from graph import Graph,Node
 from utils import probability
 import numpy as np
 from random import randint,seed,random
 import sys
+from main import romania_map
+
 
 class GraphProblemStochastic(GraphProblem):
     """
@@ -27,38 +30,39 @@ def exp_schedule(k=20, lam=0.005, limit=100):
     return lambda t: (k * np.exp(-lam * t) if t < limit else 0)
 
 
-def simulated_annealing(problem, schedule=exp_schedule()):
+def simulated_annealing(graph, start, goal, schedule=exp_schedule()):
     """[Figure 4.5] CAUTION: This differs from the pseudocode as it
     returns a state instead of a Node."""
-    current = Node(problem.initial)
+    current = Node(start, None)
     for t in range(sys.maxsize):
         T = schedule(t)
         if T == 0:
-            return current.state
-        neighbors = current.expand(problem)
+            return current.name
+        neighbors = graph.get(current.name)
         if not neighbors:
-            return current.state
+            return current.name
         next_choice = random.choice(neighbors)
-        delta_e = problem.value(next_choice.state) - problem.value(current.state)
+
+        delta_e = heuristicFunction(next_choice.name, goal) - heuristicFunction(current.name, goal)
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
 
 
-def simulated_annealing_full(problem, schedule=exp_schedule()):
+def simulated_annealing_full(graph, start, goal, schedule=exp_schedule()):
     """ This version returns all the states encountered in reaching 
     the goal state."""
     states = []
-    current = Node(problem.initial)
+    current = Node(start, None)
     for t in range(sys.maxsize):
-        states.append(current.state)
+        states.append(current.name)
         T = schedule(t)
         if T == 0:
             return states
-        neighbors = current.expand(problem)
+        neighbors = graph.get(current.name)
         if not neighbors:
-            return current.state
+            return current.name
         next_choice = random.choice(neighbors)
-        delta_e = problem.value(next_choice.state) - problem.value(current.state)
+        delta_e = heuristicFunction(next_choice.name, goal) - heuristicFunction(current.name, goal)
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
 
@@ -98,3 +102,12 @@ def and_or_graph_search(problem):
     # body of and or search
     return or_search(problem.initial, problem, [])
 
+
+def main():
+    # Run the search algorithm
+    path = simulated_annealing_full(romania_map, 'Arad', 'Bucharest')
+    print(path)
+
+
+# Tell python to run main method
+if __name__ == "__main__": main()
