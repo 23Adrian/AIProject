@@ -1,8 +1,12 @@
 from graph import *
+
 from collections import defaultdict
-import components
 import heapq
-import random as rand
+
+def depthFirstSearch(graph, start, finish):
+
+    
+    return
 
 
 def create_spanning_tree(graph, starting_vertex):
@@ -22,8 +26,23 @@ def create_spanning_tree(graph, starting_vertex):
             for to_next, cost in graph[to].items():
                 if to_next not in visited:
                     heapq.heappush(edges, (cost, to, to_next))
-    return mst
 
+    return mst
+     
+romania_map = Graph(dict(
+    Arad=dict(Zerind=75, Sibiu=140, Timisoara=118),
+    Bucharest=dict(Urziceni=85, Pitesti=101, Giurgiu=90, Fagaras=211),
+    Craiova=dict(Drobeta=120, Rimnicu=146, Pitesti=138),
+    Drobeta=dict(Mehadia=75),
+    Eforie=dict(Hirsova=86),
+    Fagaras=dict(Sibiu=99),
+    Hirsova=dict(Urziceni=98),
+    Iasi=dict(Vaslui=92, Neamt=87),
+    Lugoj=dict(Timisoara=111, Mehadia=70),
+    Oradea=dict(Zerind=71, Sibiu=151),
+    Pitesti=dict(Rimnicu=97),
+    Rimnicu=dict(Sibiu=80),
+    Urziceni=dict(Vaslui=142)))
 
 example_graph = {
     'A': {'B': 2, 'C': 3},
@@ -36,14 +55,15 @@ example_graph = {
 }
 
 dict(create_spanning_tree(example_graph, 'A'))
-def MinSpanSearch(graph, start, end, avoidTolls):
+def MinSpanSearch(graph, start, end):
     # Create lists for discovered and visited nodes
     open = []
     closed = []
     # TODO this is the seed to create sudo randomness
     # help to create a more consistent randomness
-    rand.seed(999)
-    rand.seed(35)
+    seed(999)
+    #seed(5)
+    seed(35)
     # Create a start node and an goal node
     start_node = Node(start, None)
     goal_node = Node(end, None)
@@ -89,13 +109,12 @@ def MinSpanSearch(graph, start, end, avoidTolls):
             neighbor.g = graph.get(current_node.name, neighbor.name) 
 
             # Calculate full path cost with realistic components that affect
-            neighbor.h = components.componentAdjustments(rand, neighbor.g)
 
 
             neighbor.f = neighbor.g + neighbor.h
 
             # Check if neighbor is in open list and if it has a lower f value
-            if (add_to_open(open, neighbor) == True and components.tollsComponent(rand.randint(0, 1), avoidTolls)):
+            if (add_to_open(open, neighbor) == True ):
                 # Everything is green, add neighbor to open list
                 open.append(neighbor)
 
@@ -107,3 +126,13 @@ def add_to_open(open, neighbor):
         if(neighbor == node and neighbor.f> node.f):
             return False
     return True
+
+    # The main entry point for this module
+def main():
+    # Run the search algorithm
+    path = MinSpanSearch(romania_map,  'Arad', 'Bucharest')
+    print(path)
+    
+
+# Tell python to run main method
+if __name__ == "__main__": main()
