@@ -88,12 +88,12 @@ def main():
     print(pathNoTolls)
     print(timeAvoidToll[0], end="\n\n")
 
-    minPath, timeTakeToll[1] = algorithmAnalysis(MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest', False))
+    minPath, timeTakeToll[1] = algorithmAnalysis(MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest'))
     print(minPath)
     print(timeTakeToll[1])
 
     # this will avoid tolls into account tolls
-    minPathNoTolls, timeAvoidToll[1] = algorithmAnalysis(MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest', True))
+    minPathNoTolls, timeAvoidToll[1] = algorithmAnalysis(MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest'))
     print(minPathNoTolls)
     print(timeAvoidToll[1])
 
