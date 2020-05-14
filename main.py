@@ -70,37 +70,67 @@ romania_map.locations = dict(
     Vaslui=(509, 444), Zerind=(108, 531))
 
 
-# Test Algorithm
-def algorithmAnalysis(algorithm):
+def timeAnalysis(algorithm):
     start_time = time.time()
-    return algorithm, time.time() - start_time  # returns the path and time of execution
+    if algorithm == 0:
+        path = aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', rand) 
+    else:
+        path = Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', rand, schedule=Annealing.exp_schedule())
+    return path, float(time.time() - start_time)  # returns the path and time of execution
+
+def algorithmComparisonHelper(path1, path2, time1, time2):
+    a = 0
+    b = 0
+
+    # Time Comparison
+    if time1 < time2:
+        print("A* found the path faster")
+        a = 1
+    elif time2 > time2:
+        print("Simulated Annealing found the path faster")
+        a = -1
+
+    # Path Length Comparison
+    if len(path1) < len(path2):
+        print("A* has a shorter path")
+        b = 1
+    elif len(path1) > len(path2):
+        print("Simulated Annealing has a shorter path")
+        b = -1
+    else:
+        print("The path length is the same for both algorithms")
+
+    return a, b
+
+def algorithmComparison():
+    
+    print(rand)
+    path1, timeTaken1 = timeAnalysis(0)
+    path2, timeTaken2 = timeAnalysis(1)
+    print("A* path: {}\n\nSimulated Annealing path:{}\n".format(path1, path2))
+    return algorithmComparisonHelper(path1, path2, timeTaken1, timeTaken2)
+
 
 def main():
-    rand.seed(35)
-    timeAvoidToll = [0,0]
-    timeTakeToll = [0,0,0]
-
-    # Run A* the search algorithm
-    print('A* that takes traffic components')
-    path, timeTakeToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', rand))
-    print(path)
-    print(timeTakeToll[0])
-
-    print('A* that does not take in traffic components')
-    pathNoTolls, timeAvoidToll[0] = algorithmAnalysis(aStarGraph.astar_search_no_components(romania_map, 'Arad', 'Bucharest', rand))
-    print(pathNoTolls)
-    print(timeAvoidToll[0], "\n")
-
-    # Run the Annealing search algorithm
-    print('Annealing that takes traffic components')
-    minPath, timeTakeToll[1] = algorithmAnalysis(Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', rand, schedule=Annealing.exp_schedule()))
-    print(minPath)
-    print(timeTakeToll[1])
-
-    print('Annealing that does not take in traffic components')
-    path, timeTakeToll[0] = algorithmAnalysis(Annealing.simulated_annealing_no_components(romania_map, 'Arad', 'Bucharest', rand, schedule=Annealing.exp_schedule()))
-    print(path)
-    print(timeTakeToll[0])
+    pathLength = timeAvg = 0
+    
+    for i in range(4):
+        print("\nRun {}:".format(i+1))
+        rand.seed(i*rand.randrange(1000))
+        a, b = algorithmComparison()
+        timeAvg += a
+        pathLength += b
+    
+    print("\nAverage Results")
+    if a > 0:
+        print("On average A* found the path faster")
+    else:
+        print("On average Simulated Annelaling found the path faster")
+    if b > 0:
+        print("On average A* found a shorter path")
+    else:
+        print("On average Simulated Annealing found a shorter path")
+    
 
 
 # Tell python to run main method
