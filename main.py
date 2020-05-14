@@ -78,6 +78,14 @@ def timeAnalysis(algorithm):
         path = Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', rand, schedule=Annealing.exp_schedule())
     return path, float(time.time() - start_time)  # returns the path and time of execution
 
+def timeAnalysisNoComps(algorithm):
+    start_time = time.time()
+    if algorithm == 0:
+        path = aStarGraph.astar_search_no_components(romania_map, 'Arad', 'Bucharest', rand) 
+    else:
+        path = Annealing.simulated_annealing_no_components(romania_map, 'Arad', 'Bucharest', rand, schedule=Annealing.exp_schedule())
+    return path, float(time.time() - start_time)  # returns the path and time of execution
+
 def algorithmComparisonHelper(path1, path2, time1, time2):
     a = 0
     b = 0
@@ -102,11 +110,14 @@ def algorithmComparisonHelper(path1, path2, time1, time2):
 
     return a, b
 
-def algorithmComparison():
-    
-    print(rand)
-    path1, timeTaken1 = timeAnalysis(0)
-    path2, timeTaken2 = timeAnalysis(1)
+def algorithmComparison(ComparisonBool):
+    if ComparisonBool:
+        path1, timeTaken1 = timeAnalysis(0)
+        path2, timeTaken2 = timeAnalysis(1)
+    else:
+        path1, timeTaken1 = timeAnalysisNoComps(0)
+        path2, timeTaken2 = timeAnalysisNoComps(1)
+
     print("A* path: {}\n\nSimulated Annealing path:{}\n".format(path1, path2))
     return algorithmComparisonHelper(path1, path2, timeTaken1, timeTaken2)
 
@@ -114,10 +125,19 @@ def algorithmComparison():
 def main():
     pathLength = timeAvg = 0
     
+    print('Runs with traffic components')
     for i in range(4):
         print("\nRun {}:".format(i+1))
         rand.seed(i*rand.randrange(1000))
-        a, b = algorithmComparison()
+        a, b = algorithmComparison(True)
+        timeAvg += a
+        pathLength += b
+    
+    print('Runs without traffic components')
+    for i in range(4):
+        print("\nRun {}:".format(i+1))
+        rand.seed(i*rand.randrange(1000))
+        a, b = algorithmComparison(False)
         timeAvg += a
         pathLength += b
     
@@ -130,7 +150,7 @@ def main():
         print("On average A* found a shorter path")
     else:
         print("On average Simulated Annealing found a shorter path")
-    
+  
 
 
 # Tell python to run main method
