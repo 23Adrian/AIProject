@@ -72,10 +72,12 @@ def astar_search(graph, start, end, avoidTolls):
         # Get neighbours
         neighbors = graph.get(current_node.name)
 
+
         # Loop neighbors
         for key, value in neighbors.items():
 
             # Create a neighbor node
+
             neighbor = Node(key, current_node)
 
             # Check if the neighbor is in the closed list
