@@ -4,7 +4,7 @@ from aStarGraph import heuristicFunction
 from graph import Graph,Node
 from utils import probability
 import numpy as np
-from random import randint,seed,random
+from random import randrange,seed,random
 import sys
 from main import romania_map
 
@@ -30,8 +30,8 @@ def exp_schedule(k=20, lam=0.005, limit=100):
     return lambda t: (k * np.exp(-lam * t) if t < limit else 0)
 
 def choose(neighbors_list):
-    choice = randint(0,len(neighbors_list))
-    return list(neighbors_list[choice])
+    choice = randrange(len(neighbors_list))
+    return neighbors_list[choice]
 
 def simulated_annealing(graph, start, goal, schedule=exp_schedule()):
     """[Figure 4.5] CAUTION: This differs from the pseudocode as it
@@ -64,8 +64,8 @@ def simulated_annealing_full(graph, start, goal, schedule=exp_schedule()):
         neighbors = graph.get(current.name)
         if not neighbors:
             return current.name
-        next_choice = Node(choose(list(neighbors))[0], current)
-        delta_e = heuristicFunction(next_choice.name, goal) - heuristicFunction(current.name, goal)
+        next_choice = Node(choose(list(neighbors)), current)
+        delta_e = heuristicFunction(str(next_choice.name), goal) - heuristicFunction(str(current.name), goal)
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
 
