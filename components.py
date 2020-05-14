@@ -47,12 +47,6 @@ def _accidentComponent(accident):
     return 50
 
 
-def tollsComponent(toll, avoidTolls):
-    # has toll and the user want to avoid tolls
-    if (toll == 1 and avoidTolls == True):
-        return False
-    return True
-
 def componentAdjustments(rand, distance):
     return _trafficComponent(rand.randint(0, 5)) + \
             _speedComponent(rand.randint(0, 4), distance) + \

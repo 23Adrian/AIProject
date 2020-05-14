@@ -1,7 +1,6 @@
 import main
 import math
 import components
-# import random as rand
 
 
 # This class represent a node
@@ -32,7 +31,7 @@ class Node:
 
 # A* search
 # def astar_search(graph, heuristics, start, end):
-def astar_search(graph, start, end, avoidTolls, rand):
+def astar_search(graph, start, end, rand):
     # Create lists for discovered and visited nodes
     open = []
     closed = []
@@ -92,12 +91,74 @@ def astar_search(graph, start, end, avoidTolls, rand):
             neighbor.f = neighbor.g + neighbor.h
 
             # Check if neighbor is in open list and if it has a lower f value
-            if (add_to_open(open, neighbor) == True and components.tollsComponent(rand.randint(0, 1), avoidTolls)):
+            if (add_to_open(open, neighbor) == True):
                 # Everything is green, add neighbor to open list
                 open.append(neighbor)
 
-    # Return None, no path is found without tolls
-    return "There is no toll-free path to reach the destination."
+    # Return None, no path is found
+    return none
+
+def astar_search_no_components(graph, start, end, rand):
+    # Create lists for discovered and visited nodes
+    open = []
+    closed = []
+    # TODO this is the seed to create sudo randomness
+    # help to create a more consistent randomness
+    rand.seed(999)
+    rand.seed(35)
+    # Create a start node and an goal node
+    start_node = Node(start, None)
+    goal_node = Node(end, None)
+
+    # Add the start node
+    open.append(start_node)
+
+    # Loop until the open list is empty
+    while len(open) > 0:
+        # Sort the open list to get the node with the lowest cost first
+        open.sort()
+
+        # Get the node with the lowest cost
+        current_node = open.pop(0)
+
+        # Add the current node to the closed list
+        closed.append(current_node)
+
+        # Check if we have reached the goal, return the path
+        if current_node == goal_node:
+            path = []
+            while current_node != start_node:
+                path.append(current_node.name + ': ' + str(current_node.g))
+                current_node = current_node.parent
+            path.append(start_node.name + ': ' + str(start_node.g))
+            # Return reversed path
+            return path[::-1]
+
+        # Get neighbours
+        neighbors = graph.get(current_node.name)
+
+
+        # Loop neighbors
+        for key, value in neighbors.items():
+
+            # Create a neighbor node
+
+            neighbor = Node(key, current_node)
+
+            # Check if the neighbor is in the closed list
+            if (neighbor in closed):
+                continue
+
+            # Calculate full path cost
+            neighbor.g = graph.get(current_node.name, neighbor.name) + heuristicFunction(neighbor.name, goal_node.name)
+            neighbor.f = neighbor.g
+
+            # Check if neighbor is in open list and if it has a lower f value
+            if (add_to_open(open, neighbor) == True):
+                # Everything is green, add neighbor to open list
+                open.append(neighbor)
+    # Return None, no path is found
+    return none
 
 
 # Check if a neighbor should be added to open list

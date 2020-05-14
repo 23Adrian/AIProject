@@ -2,11 +2,10 @@ from SearchAlgos import GraphProblem
 import components
 import math
 import main
-from graph import Graph,Node
+from graph import Graph, Node
 from utils import probability
 import numpy as np
 import sys
-
 
 
 class GraphProblemStochastic(GraphProblem):
@@ -43,12 +42,10 @@ def simulated_annealing_no_components(graph, start,goal,rand, schedule):
         if T == 0:
             path = []
             while current != start_node:
-                # Borrar este comentario, se necesita que current.g marque el valor verdadero una vez se haga lo de accidents, etc
                 path.append(current.name + ': ' + str(current.f))
                 current = current.parent
             path.append(start_node.name + ': ' + str(start_node.f))
             # Return reversed path
-            # print(states)     # I commented this print (Gabriel)
             return path[::-1]
             # return states
         neighbors = graph.get(current.name)
@@ -63,7 +60,7 @@ def simulated_annealing_no_components(graph, start,goal,rand, schedule):
             current = next_choice
 
 
-def simulated_annealing_full(graph, start, goal, avoidTolls, rand, schedule=exp_schedule()):
+def simulated_annealing_full(graph, start, goal, rand, schedule=exp_schedule()):
     """ This version returns all the states encountered in reaching 
     the goal state."""
     states = []
@@ -76,12 +73,10 @@ def simulated_annealing_full(graph, start, goal, avoidTolls, rand, schedule=exp_
         if T == 0:
             path = []
             while current != start_node:
-                # Borrar este comentario, se necesita que current.g marque el valor verdadero una vez se haga lo de accidents, etc
                 path.append(current.name + ': ' + str(current.f))
                 current = current.parent
             path.append(start_node.name + ': ' + str(start_node.f))
             # Return reversed path
-            # print(states)     # I commented this print (Gabriel)
             return path[::-1]
             #return states
         neighbors = graph.get(current.name)
