@@ -1,4 +1,3 @@
-
 from SearchAlgos import GraphProblem
 from aStarGraph import heuristicFunction
 from graph import Graph,Node
@@ -36,6 +35,7 @@ def choose(neighbors_list):
 def simulated_annealing(graph, start, goal, schedule=exp_schedule()):
     """[Figure 4.5] CAUTION: This differs from the pseudocode as it
     returns a state instead of a Node."""
+
     current = Node(start, None)
     for t in range(sys.maxsize):
         T = schedule(t)
@@ -55,19 +55,34 @@ def simulated_annealing_full(graph, start, goal, schedule=exp_schedule()):
     """ This version returns all the states encountered in reaching 
     the goal state."""
     states = []
+    start_node = Node(start,None)
     current = Node(start, None)
     for t in range(sys.maxsize):
         states.append(current.name)
         T = schedule(t)
         if T == 0:
-            return states
+            path = []
+            while current != start_node:
+                path.append(current.name + ': ' + str(current.g))
+                current = current.parent
+            path.append(start_node.name + ': ' + str(start_node.g))
+            # Return reversed path
+            print(states)
+            return path[::-1]
+            #return states
         neighbors = graph.get(current.name)
         if not neighbors:
             return current.name
         next_choice = Node(choose(list(neighbors)), current)
-        delta_e = heuristicFunction(str(next_choice.name), goal) - heuristicFunction(str(current.name), goal)
+        delta_e =   heuristicFunction(str(current.name), goal) - heuristicFunction(str(next_choice.name), goal)
+        #delta_e = next_choice.f - current.g
+        #delta_e - next_choice.h - current.g
+        #delta_e = next_choice.g - current.g
+
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
+
+
 
 
 def and_or_graph_search(problem):
