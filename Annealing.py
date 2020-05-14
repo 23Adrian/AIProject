@@ -29,9 +29,9 @@ def exp_schedule(k=20, lam=0.005, limit=100):
     """One possible schedule function for simulated annealing"""
     return lambda t: (k * np.exp(-lam * t) if t < limit else 0)
 
-def choose(list):
-    choice = randint(0,len(list))
-    return list[choice]
+def choose(neighbors_list):
+    choice = randint(0,len(neighbors_list))
+    return list(neighbors_list[choice])
 
 def simulated_annealing(graph, start, goal, schedule=exp_schedule()):
     """[Figure 4.5] CAUTION: This differs from the pseudocode as it
@@ -64,7 +64,7 @@ def simulated_annealing_full(graph, start, goal, schedule=exp_schedule()):
         neighbors = graph.get(current.name)
         if not neighbors:
             return current.name
-        next_choice = Node(choose(neighbors)[0], current)
+        next_choice = Node(choose(list(neighbors))[0], current)
         delta_e = heuristicFunction(next_choice.name, goal) - heuristicFunction(current.name, goal)
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
