@@ -1,3 +1,7 @@
+import main
+import math
+
+
 def _trafficComponent(traffic):
     # no traffic
     if traffic == 0:
@@ -53,3 +57,13 @@ def componentAdjustments(rand, distance):
     return _trafficComponent(rand.randint(0, 5)) + \
             _speedComponent(rand.randint(0, 4), distance) + \
             _accidentComponent(rand.randint(0, 1))
+
+
+def heuristicFunction(current, goal):
+    x1, y1 = (main.romania_map.locations.get(current))
+
+    x2, y2 = (main.romania_map.locations.get(goal))
+
+    x = int(x2) - int(x1)
+    y = int(y2) - int(y1)
+    return int(math.sqrt((x ** 2) + (y ** 2)))

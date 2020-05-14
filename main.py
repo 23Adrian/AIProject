@@ -1,5 +1,5 @@
 import aStarGraph
-import MinSpanSearch
+import Annealing
 import time
 
 
@@ -77,6 +77,7 @@ def algorithmAnalysis(algorithm):
 def main():
     timeAvoidToll = [0,0]
     timeTakeToll = [0,0]
+
     # Run the search algorithm
     # this will continue even if it has tolls
     path, timeTakeToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', False))
@@ -88,14 +89,15 @@ def main():
     print(pathNoTolls)
     print(timeAvoidToll[0], end="\n\n")
 
-    minPath, timeTakeToll[1] = algorithmAnalysis(MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest'))
-    print(minPath)
-    print(timeTakeToll[1])
+    # this will continue even if it has tolls
+    # minPath, timeTakeToll[1] = algorithmAnalysis(Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', schedule=Annealing.exp_schedule()))
+    # print(minPath)
+    # print(timeTakeToll[1])
 
     # this will avoid tolls into account tolls
-    minPathNoTolls, timeAvoidToll[1] = algorithmAnalysis(MinSpanSearch.MinSpanSearch(romania_map, 'Arad', 'Bucharest'))
-    print(minPathNoTolls)
-    print(timeAvoidToll[1])
+    # minPathNoTolls, timeAvoidToll[1] = algorithmAnalysis(Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', schedule=Annealing.exp_schedule()), True)
+    # print(minPathNoTolls)
+    # print(timeAvoidToll[1])
 
 # Tell python to run main method
 if __name__ == "__main__": main()

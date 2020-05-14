@@ -1,6 +1,6 @@
+import main
 import math
 import components
-import main
 import random as rand
 
 
@@ -39,7 +39,6 @@ def astar_search(graph, start, end, avoidTolls):
     # TODO this is the seed to create sudo randomness
     # help to create a more consistent randomness
     rand.seed(999)
-    rand.seed(5)
     rand.seed(35)
     # Create a start node and an goal node
     start_node = Node(start, None)

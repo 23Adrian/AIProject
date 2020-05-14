@@ -485,7 +485,7 @@ class EightPuzzle(Problem):
         return inversion % 2 == 0
 
     def h(self, node):
-        """ Return the heuristic value for a given state. Default heuristic function used is 
+        """ Return the heuristic value for a given state. Default heuristic function used is
         h(n) = number of misplaced tiles """
 
         return sum(s != g for (s, g) in zip(node.state, self.goal))
@@ -671,7 +671,7 @@ def simulated_annealing(problem, schedule=exp_schedule()):
 
 
 def simulated_annealing_full(problem, schedule=exp_schedule()):
-    """ This version returns all the states encountered in reaching 
+    """ This version returns all the states encountered in reaching
     the goal state."""
     #TODO this is where the annealing is
     states = []
@@ -1247,7 +1247,7 @@ class NQueensProblem(Problem):
 
     def actions(self, state):
         """In the leftmost empty column, try all non-conflicting rows."""
-        if state[-1] is not -1:
+        if not state[-1] == -1:
             return []  # All columns filled; no successors
         else:
             col = state.index(-1)
@@ -1275,7 +1275,7 @@ class NQueensProblem(Problem):
 
     def goal_test(self, state):
         """Check if all columns filled, no conflicts."""
-        if state[-1] is -1:
+        if state[-1] == -1:
             return False
         return not any(self.conflicted(state, state[col], col)
                        for col in range(len(state)))

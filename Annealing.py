@@ -1,11 +1,12 @@
 from SearchAlgos import GraphProblem
-from aStarGraph import heuristicFunction
+import math
+import main
 from graph import Graph,Node
 from utils import probability
 import numpy as np
 from random import randrange,seed,random
 import sys
-from main import romania_map
+
 
 
 class GraphProblemStochastic(GraphProblem):
@@ -23,32 +24,14 @@ class GraphProblemStochastic(GraphProblem):
         raise NotImplementedError
 
 
-
-def exp_schedule(k=20, lam=0.005, limit=100):
+def exp_schedule(k=20, lam=0.005, limit=50):
     """One possible schedule function for simulated annealing"""
     return lambda t: (k * np.exp(-lam * t) if t < limit else 0)
+
 
 def choose(neighbors_list):
     choice = randrange(len(neighbors_list))
     return neighbors_list[choice]
-
-def simulated_annealing(graph, start, goal, schedule=exp_schedule()):
-    """[Figure 4.5] CAUTION: This differs from the pseudocode as it
-    returns a state instead of a Node."""
-
-    current = Node(start, None)
-    for t in range(sys.maxsize):
-        T = schedule(t)
-        if T == 0:
-            return current.name
-        neighbors = graph.get(current.name)
-        if not neighbors:
-            return current.name
-        next_choice = Node(choose(neighbors),current)
-
-        delta_e = heuristicFunction(next_choice.name, goal) - heuristicFunction(current.name, goal)
-        if delta_e > 0 or probability(np.exp(delta_e / T)):
-            current = next_choice
 
 
 def simulated_annealing_full(graph, start, goal, schedule=exp_schedule()):
@@ -63,6 +46,7 @@ def simulated_annealing_full(graph, start, goal, schedule=exp_schedule()):
         if T == 0:
             path = []
             while current != start_node:
+                # Borrar este comentario, se necesita que current.g marque el valor verdadero una vez se haga lo de accidents, etc
                 path.append(current.name + ': ' + str(current.g))
                 current = current.parent
             path.append(start_node.name + ': ' + str(start_node.g))
@@ -74,15 +58,9 @@ def simulated_annealing_full(graph, start, goal, schedule=exp_schedule()):
         if not neighbors:
             return current.name
         next_choice = Node(choose(list(neighbors)), current)
-        delta_e =   heuristicFunction(str(current.name), goal) - heuristicFunction(str(next_choice.name), goal)
-        #delta_e = next_choice.f - current.g
-        #delta_e - next_choice.h - current.g
-        #delta_e = next_choice.g - current.g
-
+        delta_e = heuristicFunction(str(current.name), goal) - heuristicFunction(str(next_choice.name), goal)
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
-
-
 
 
 def and_or_graph_search(problem):
@@ -121,11 +99,13 @@ def and_or_graph_search(problem):
     return or_search(problem.initial, problem, [])
 
 
-def main():
-    # Run the search algorithm
-    path = simulated_annealing_full(romania_map, 'Arad', 'Bucharest')
-    print(path)
+def heuristicFunction(current, goal):
+    x1, y1 = (main.romania_map.locations.get(current))
+
+    x2, y2 = (main.romania_map.locations.get(goal))
+
+    x = int(x2) - int(x1)
+    y = int(y2) - int(y1)
+    return int(math.sqrt((x ** 2) + (y ** 2)))
 
 
-# Tell python to run main method
-if __name__ == "__main__": main()
