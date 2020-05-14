@@ -44,7 +44,7 @@ def UndirectedGraph(graph_dict=None):
     """Build a Graph where every edge (including future ones) goes both ways."""
     return Graph(graph_dict=graph_dict, directed=False)
 
-
+# Map
 romania_map = UndirectedGraph(dict(
     Arad=dict(Zerind=75, Sibiu=140, Timisoara=118),
     Bucharest=dict(Urziceni=85, Pitesti=101, Giurgiu=90, Fagaras=211),
@@ -69,7 +69,7 @@ romania_map.locations = dict(
     Sibiu=(207, 457), Timisoara=(94, 410), Urziceni=(456, 350),
     Vaslui=(509, 444), Zerind=(108, 531))
 
-
+# Calculates algorithm run time
 def timeAnalysis(algorithm, rand):
     start_time = time.time()
     if algorithm == 0:
@@ -86,6 +86,7 @@ def timeAnalysisNoComps(algorithm, rand):
         path = Annealing.simulated_annealing_no_components(romania_map, 'Arad', 'Bucharest', rand, schedule=Annealing.exp_schedule())
     return path, float(time.time() - start_time)  # returns the path and time of execution
 
+# Indicates which algorithm performed better
 def algorithmComparisonHelper(path1, path2, time1, time2):
     a = 0
     b = 0
@@ -110,6 +111,7 @@ def algorithmComparisonHelper(path1, path2, time1, time2):
 
     return a, b
 
+# Runs the algorithm and indicatess which one performed better
 def algorithmComparison(ComparisonBool, rand):
     if ComparisonBool:
         path1, timeTaken1 = timeAnalysis(0, rand)
@@ -125,7 +127,8 @@ def algorithmComparison(ComparisonBool, rand):
 def main():
     pathLengthAvg = timeAvg = 0
     
-    print('Runs with traffic components', end="")
+    # Runs both algorithms with the traffic components
+    print('\n\nRuns with traffic components', end="")
     for i in range(4):
         print("\nRun {}:".format(i+1))
         rand.seed(i*rand.randrange(1000))
@@ -133,6 +136,7 @@ def main():
         timeAvg += a
         pathLengthAvg += b
     
+    # Runs both algorithms without the traffic components
     print('\nRuns without traffic components', end="")
     for i in range(4):
         print("\nRun {}:".format(i+1))
@@ -140,7 +144,8 @@ def main():
         a, b = algorithmComparison(False, rand)
         timeAvg += a
         pathLengthAvg += b
-    print("\nAverage Results")
+    # Average results from all runs
+    print("\n__________________________________________________________\nAverage Results")
     if timeAvg > 0:
         print("On average A* found the path faster")
     else:
