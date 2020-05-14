@@ -53,9 +53,11 @@ def simulated_annealing_no_components(graph, start,goal,rand, schedule):
             return current.name
         next_choice = Node(choose(list(neighbors),rand), current)
 
-        # Calculates path cost with realistic components
+        # Calculates path cost without realistic components
+        current.f = heuristicFunction(str(current.name), goal)
+        next_choice.f = heuristicFunction(str(next_choice.name), goal)
         # calcualtes delta e with the path costs
-        delta_e = heuristicFunction(current.name,goal) - heuristicFunction(next_choice.name, goal)
+        delta_e = current.f - next_choice.f
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
 

@@ -70,7 +70,7 @@ romania_map.locations = dict(
     Vaslui=(509, 444), Zerind=(108, 531))
 
 
-def timeAnalysis(algorithm):
+def timeAnalysis(algorithm, rand):
     start_time = time.time()
     if algorithm == 0:
         path = aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', rand) 
@@ -78,7 +78,7 @@ def timeAnalysis(algorithm):
         path = Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', rand, schedule=Annealing.exp_schedule())
     return path, float(time.time() - start_time)  # returns the path and time of execution
 
-def timeAnalysisNoComps(algorithm):
+def timeAnalysisNoComps(algorithm, rand):
     start_time = time.time()
     if algorithm == 0:
         path = aStarGraph.astar_search_no_components(romania_map, 'Arad', 'Bucharest', rand) 
@@ -110,13 +110,13 @@ def algorithmComparisonHelper(path1, path2, time1, time2):
 
     return a, b
 
-def algorithmComparison(ComparisonBool):
+def algorithmComparison(ComparisonBool, rand):
     if ComparisonBool:
-        path1, timeTaken1 = timeAnalysis(0)
-        path2, timeTaken2 = timeAnalysis(1)
+        path1, timeTaken1 = timeAnalysis(0, rand)
+        path2, timeTaken2 = timeAnalysis(1, rand)
     else:
-        path1, timeTaken1 = timeAnalysisNoComps(0)
-        path2, timeTaken2 = timeAnalysisNoComps(1)
+        path1, timeTaken1 = timeAnalysisNoComps(0, rand)
+        path2, timeTaken2 = timeAnalysisNoComps(1, rand)
 
     print("A* path: {}\n\nSimulated Annealing path:{}\n".format(path1, path2))
     return algorithmComparisonHelper(path1, path2, timeTaken1, timeTaken2)
@@ -125,19 +125,19 @@ def algorithmComparison(ComparisonBool):
 def main():
     pathLength = timeAvg = 0
     
-    print('Runs with traffic components')
+    print('\n\nRuns with traffic components', end="")
     for i in range(4):
         print("\nRun {}:".format(i+1))
         rand.seed(i*rand.randrange(1000))
-        a, b = algorithmComparison(True)
+        a, b = algorithmComparison(True, rand)
         timeAvg += a
         pathLength += b
     
-    print('Runs without traffic components')
+    print('\nRuns without traffic components', end="")
     for i in range(4):
         print("\nRun {}:".format(i+1))
         rand.seed(i*rand.randrange(1000))
-        a, b = algorithmComparison(False)
+        a, b = algorithmComparison(False, rand)
         timeAvg += a
         pathLength += b
     
