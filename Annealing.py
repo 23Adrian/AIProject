@@ -16,7 +16,6 @@ class GraphProblemStochastic(GraphProblem):
     Define the graph as dict(A = dict(Action = [[<Result 1>, <Result 2>, ...], <cost>], ...), ...)
     A the dictionary format is different, make sure the graph is created as a directed graph.
     """
-
     def result(self, state, action):
         return self.graph.get(state, action)
 
@@ -33,11 +32,40 @@ def choose(neighbors_list,rand):
     choice = rand.randrange(len(neighbors_list))
     return neighbors_list[choice]
 
+def simulated_annealing_no_components(graph, start,goal,rand, schedule):
+    states = []
+    start_node = Node(start, None)
+    current = Node(start, None)
+
+    for t in range(sys.maxsize):
+        states.append(current.name)
+        T = schedule(t)
+        if T == 0:
+            path = []
+            while current != start_node:
+                # Borrar este comentario, se necesita que current.g marque el valor verdadero una vez se haga lo de accidents, etc
+                path.append(current.name + ': ' + str(current.f))
+                current = current.parent
+            path.append(start_node.name + ': ' + str(start_node.f))
+            # Return reversed path
+            # print(states)     # I commented this print (Gabriel)
+            return path[::-1]
+            # return states
+        neighbors = graph.get(current.name)
+        if not neighbors:
+            return current.name
+        next_choice = Node(choose(list(neighbors),rand), current)
+
+        # Calculates path cost with realistic components
+        # calcualtes delta e with the path costs
+        delta_e = heuristicFunction(current.name,goal) - heuristicFunction(next_choice.name, goal)
+        if delta_e > 0 or probability(np.exp(delta_e / T)):
+            current = next_choice
+
 
 def simulated_annealing_full(graph, start, goal, avoidTolls, rand, schedule=exp_schedule()):
     """ This version returns all the states encountered in reaching 
     the goal state."""
-
     states = []
     start_node = Node(start,None)
     current = Node(start, None)
@@ -69,42 +97,6 @@ def simulated_annealing_full(graph, start, goal, avoidTolls, rand, schedule=exp_
         delta_e = current.f - next_choice.f
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
-
-
-def and_or_graph_search(problem):
-    """[Figure 4.11]Used when the environment is nondeterministic and completely observable.
-    Contains OR nodes where the agent is free to choose any action.
-    After every action there is an AND node which contains all possible states
-    the agent may reach due to stochastic nature of environment.
-    The agent must be able to handle all possible states of the AND node (as it
-    may end up in any of them).
-    Returns a conditional plan to reach goal state,
-    or failure if the former is not possible."""
-
-    # functions used by and_or_search
-    def or_search(state, problem, path):
-        """returns a plan as a list of actions"""
-        if problem.goal_test(state):
-            return []
-        if state in path:
-            return None
-        for action in problem.actions(state):
-            plan = and_search(problem.result(state, action),
-                              problem, path + [state, ])
-            if plan is not None:
-                return [action, plan]
-
-    def and_search(states, problem, path):
-        """Returns plan in form of dictionary where we take action plan[s] if we reach state s."""
-        plan = {}
-        for s in states:
-            plan[s] = or_search(s, problem, path)
-            if plan[s] is None:
-                return None
-        return plan
-
-    # body of and or search
-    return or_search(problem.initial, problem, [])
 
 
 def heuristicFunction(current, goal):

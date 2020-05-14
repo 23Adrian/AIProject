@@ -82,20 +82,27 @@ def main():
 
     # Run the search algorithm
     # this will continue even if it has tolls
+    print('A* that does not ignore tolls')
     path, timeTakeToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', False, rand))
     print(path)
     print(timeTakeToll[0])
 
     # this will avoid tolls into account tolls
+    print('A* that does ignore tolls')
     pathNoTolls, timeAvoidToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', True, rand))
     print(pathNoTolls)
     print(timeAvoidToll[0], end="\n\n")
 
     # this will continue even if it has tolls
+    print('Annealing that takes traffic components')
     minPath, timeTakeToll[1] = algorithmAnalysis(Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', False, rand, schedule=Annealing.exp_schedule()))
     print(minPath)
     # print(timeTakeToll[1])
-
+    # this is the a version that only considers distance and not the possible accidents, traffic, speed
+    print('annealing that does not take in traffic components')
+    path, timeTakeToll[0]  = algorithmAnalysis(Annealing.simulated_annealing_no_components(romania_map, 'Arad', 'Bucharest', rand, schedule=Annealing.exp_schedule()))
+    print(path)
+    print(timeTakeToll[0])
     # this will avoid tolls into account tolls
     # minPathNoTolls, timeAvoidToll[1] = algorithmAnalysis(Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', True, rand schedule=Annealing.exp_schedule()))
     # print(minPathNoTolls)
