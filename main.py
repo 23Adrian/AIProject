@@ -123,7 +123,7 @@ def algorithmComparison(ComparisonBool, rand):
 
 
 def main():
-    pathLength = timeAvg = 0
+    pathLengthAvg = timeAvg = 0
     
     print('\n\nRuns with traffic components', end="")
     for i in range(4):
@@ -131,7 +131,7 @@ def main():
         rand.seed(i*rand.randrange(1000))
         a, b = algorithmComparison(True, rand)
         timeAvg += a
-        pathLength += b
+        pathLengthAvg += b
     
     print('\nRuns without traffic components', end="")
     for i in range(4):
@@ -139,14 +139,14 @@ def main():
         rand.seed(i*rand.randrange(1000))
         a, b = algorithmComparison(False, rand)
         timeAvg += a
-        pathLength += b
-    
+        pathLengthAvg += b
     print("\nAverage Results")
-    if a > 0:
+    if timeAvg > 0:
         print("On average A* found the path faster")
     else:
         print("On average Simulated Annelaling found the path faster")
-    if b > 0:
+
+    if pathLengthAvg > 0:
         print("On average A* found a shorter path")
     else:
         print("On average Simulated Annealing found a shorter path")
