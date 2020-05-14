@@ -1,7 +1,7 @@
 import main
 import math
 import components
-import random as rand
+# import random as rand
 
 
 # This class represent a node
@@ -32,7 +32,7 @@ class Node:
 
 # A* search
 # def astar_search(graph, heuristics, start, end):
-def astar_search(graph, start, end, avoidTolls):
+def astar_search(graph, start, end, avoidTolls, rand):
     # Create lists for discovered and visited nodes
     open = []
     closed = []

@@ -1,6 +1,7 @@
 import aStarGraph
 import Annealing
 import time
+import random as rand
 
 
 class Graph:
@@ -75,27 +76,28 @@ def algorithmAnalysis(algorithm):
     return algorithm, time.time() - start_time  # returns the path and time of execution
 
 def main():
+    rand.seed(35)
     timeAvoidToll = [0,0]
     timeTakeToll = [0,0]
 
     # Run the search algorithm
     # this will continue even if it has tolls
-    path, timeTakeToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', False))
+    path, timeTakeToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', False, rand))
     print(path)
     print(timeTakeToll[0])
 
     # this will avoid tolls into account tolls
-    pathNoTolls, timeAvoidToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', True))
+    pathNoTolls, timeAvoidToll[0] = algorithmAnalysis(aStarGraph.astar_search(romania_map, 'Arad', 'Bucharest', True, rand))
     print(pathNoTolls)
     print(timeAvoidToll[0], end="\n\n")
 
     # this will continue even if it has tolls
-    # minPath, timeTakeToll[1] = algorithmAnalysis(Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', schedule=Annealing.exp_schedule()))
-    # print(minPath)
+    minPath, timeTakeToll[1] = algorithmAnalysis(Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', False, rand, schedule=Annealing.exp_schedule()))
+    print(minPath)
     # print(timeTakeToll[1])
 
     # this will avoid tolls into account tolls
-    # minPathNoTolls, timeAvoidToll[1] = algorithmAnalysis(Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', schedule=Annealing.exp_schedule()), True)
+    # minPathNoTolls, timeAvoidToll[1] = algorithmAnalysis(Annealing.simulated_annealing_full(romania_map, 'Arad', 'Bucharest', True, rand schedule=Annealing.exp_schedule()))
     # print(minPathNoTolls)
     # print(timeAvoidToll[1])
 

@@ -1,10 +1,10 @@
 from SearchAlgos import GraphProblem
+import components
 import math
 import main
 from graph import Graph,Node
 from utils import probability
 import numpy as np
-from random import randrange,seed,random
 import sys
 
 
@@ -29,17 +29,19 @@ def exp_schedule(k=20, lam=0.005, limit=50):
     return lambda t: (k * np.exp(-lam * t) if t < limit else 0)
 
 
-def choose(neighbors_list):
-    choice = randrange(len(neighbors_list))
+def choose(neighbors_list,rand):
+    choice = rand.randrange(len(neighbors_list))
     return neighbors_list[choice]
 
 
-def simulated_annealing_full(graph, start, goal, schedule=exp_schedule()):
+def simulated_annealing_full(graph, start, goal, avoidTolls, rand, schedule=exp_schedule()):
     """ This version returns all the states encountered in reaching 
     the goal state."""
+
     states = []
     start_node = Node(start,None)
     current = Node(start, None)
+
     for t in range(sys.maxsize):
         states.append(current.name)
         T = schedule(t)
@@ -47,18 +49,24 @@ def simulated_annealing_full(graph, start, goal, schedule=exp_schedule()):
             path = []
             while current != start_node:
                 # Borrar este comentario, se necesita que current.g marque el valor verdadero una vez se haga lo de accidents, etc
-                path.append(current.name + ': ' + str(current.g))
+                path.append(current.name + ': ' + str(current.f))
                 current = current.parent
-            path.append(start_node.name + ': ' + str(start_node.g))
+            path.append(start_node.name + ': ' + str(start_node.f))
             # Return reversed path
-            print(states)
+            # print(states)     # I commented this print (Gabriel)
             return path[::-1]
             #return states
         neighbors = graph.get(current.name)
         if not neighbors:
             return current.name
-        next_choice = Node(choose(list(neighbors)), current)
-        delta_e = heuristicFunction(str(current.name), goal) - heuristicFunction(str(next_choice.name), goal)
+        next_choice = Node(choose(list(neighbors),rand), current)
+
+        # Calculates path cost with realistic components
+        current.f = components.componentAdjustments(rand, heuristicFunction(str(current.name), goal))
+        next_choice.f = components.componentAdjustments(rand, heuristicFunction(str(next_choice.name), goal))
+
+        # calcualtes delta e with the path costs
+        delta_e = current.f - next_choice.f
         if delta_e > 0 or probability(np.exp(delta_e / T)):
             current = next_choice
 
