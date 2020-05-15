@@ -4,7 +4,7 @@ to give the best and least cost. This is done with two algorithms, the first is 
 and the second is Annealing.
 
 Prerequisites \
-  Have a terminal or editor installed to be able to run the program. 
+  Have a terminal or editor installed to be able to run the program in Python with the numpy library.
 
 Running the program \
   IDE: \
