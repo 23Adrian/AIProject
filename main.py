@@ -125,7 +125,7 @@ def algorithmComparison(ComparisonBool, rand):
 def main():
     pathLengthAvg = timeAvg = 0
     
-    print('\n\nRuns with traffic components', end="")
+    print('Runs with traffic components', end="")
     for i in range(4):
         print("\nRun {}:".format(i+1))
         rand.seed(i*rand.randrange(1000))

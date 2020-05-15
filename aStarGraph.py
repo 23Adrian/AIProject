@@ -37,8 +37,6 @@ def astar_search(graph, start, end, rand):
     closed = []
     # TODO this is the seed to create sudo randomness
     # help to create a more consistent randomness
-    rand.seed(999)
-    rand.seed(35)
     # Create a start node and an goal node
     start_node = Node(start, None)
     goal_node = Node(end, None)
@@ -104,8 +102,6 @@ def astar_search_no_components(graph, start, end, rand):
     closed = []
     # TODO this is the seed to create sudo randomness
     # help to create a more consistent randomness
-    rand.seed(999)
-    rand.seed(35)
     # Create a start node and an goal node
     start_node = Node(start, None)
     goal_node = Node(end, None)
